@@ -1,3 +1,6 @@
+USE adventureworks2022
+
+
 /*
 CREATE TABLE [Production].[WorkOrder](
 	[WorkOrderID] [int] IDENTITY(1,1) NOT NULL,
@@ -163,9 +166,25 @@ FROM
     Person.Person AS c
 WHERE 
     c.FirstName IS NOT NULL AND c.LastName IS NOT NULL  
-    
 
+Select TerritoryID FROM [Sales].[SalesPerson]
+WHERE 
+	TerritoryID IS NULL
 
+-- Rank employees by vacation hours in the department. Only select BusinessEntityID, LoginID, JobTitle, and VacationHours.
+SELECT 
+	e.BusinessEntityID,
+	e.LoginID,
+	e.JobTitle,
+	e.VacationHours,
+	RANK() OVER (PARTITION BY d.DepartmentID ORDER BY e.VacationHours DESC) AS Rank
+FROM 
+	HumanResources.Employee AS e
+INNER JOIN 
+	HumanResources.EmployeeDepartmentHistory AS d
+	ON e.BusinessEntityID = d.BusinessEntityID
+WHERE 
+	d.EndDate IS NULL; -- Only consider current department assignments
 
 
 
